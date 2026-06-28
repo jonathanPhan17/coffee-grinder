@@ -1,23 +1,87 @@
 @import "tailwindcss";
 
+/*
+ * Coffee Grinder — theme tokens.
+ * Dark roast is the default (:root). Latte (light) is opt-in via `.latte` on <html>.
+ */
+@theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent: var(--accent); /* cinnamon — primary CTAs */
+  --color-accent-hover: var(--accent-hover);
+  --color-crema: var(--crema);
+  --color-success: var(--success); /* criterion met */
+  --color-warning: var(--warning); /* criterion partial */
+  --color-danger: var(--danger); /* criterion not met */
+
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Nunito Sans Variable", system-ui, "Segoe UI", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Extra-small breakpoint */
+  --breakpoint-xs: 400px;
+}
+
+/* Dark roast — default */
 :root {
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --bg: #1e1611;
+  --surface: #2c211a;
+  --elevated: #3a2c22;
+  --border: #4a382c;
+  --text: #f0e6d8;
+  --text-secondary: #c9b7a3;
+  --accent: #d17b3f;
+  --accent-hover: #c06d34;
+  --crema: #d9a066;
+  --success: #7fa06e;
+  --warning: #e0a23c;
+  --danger: #d06a52;
+
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+/* Latte — light (secondary) */
+.latte {
+  --bg: #fbf7f2;
+  --surface: #f3e9dd;
+  --elevated: #ffffff;
+  --border: #e2d5c5;
+  --text: #3b2a20;
+  --text-secondary: #6f5b4a;
+  --accent: #b5651d;
+  --accent-hover: #a25917;
+  --crema: #d4a373;
+  --success: #5e7c5a;
+  --warning: #c9852a;
+  --danger: #b3503c;
+
+  color-scheme: light;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
 }
