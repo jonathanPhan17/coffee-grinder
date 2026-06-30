@@ -6,5 +6,6 @@ export function useMatches(runId: string) {
   return useQuery({
     queryKey: queryKeys.matches.list(runId),
     queryFn: () => listMatches(runId),
+    enabled: Boolean(runId),
   });
 }

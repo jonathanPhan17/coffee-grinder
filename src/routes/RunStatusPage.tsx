@@ -16,10 +16,13 @@ export function RunStatusPage() {
 
   useEffect(() => {
     if (profile && run?.status === 'done') {
-      const timer = setTimeout(() => navigate('/results', { replace: true }), 600);
+      const timer = setTimeout(
+        () => navigate(`/results?run=${runId}`, { replace: true }),
+        600,
+      );
       return () => clearTimeout(timer);
     }
-  }, [profile, run?.status, navigate]);
+  }, [profile, run?.status, runId, navigate]);
 
   if (!runId || !profile) return <Navigate to="/" replace />;
 
