@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { CoverLetterWorkspace } from '@/features/coverletter/CoverLetterWorkspace';
-import { useMatch } from '@/features/scorecard/useMatch';
+import { useMatch } from '@/features/matches/useMatch';
 
 export function CoverLetterPage() {
   const { matchId } = useParams();

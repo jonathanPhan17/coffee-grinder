@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { FilterSortBar } from '@/features/results/FilterSortBar';
 import { MatchCard } from '@/features/results/MatchCard';
 import { MatchListSkeleton } from '@/features/results/MatchListSkeleton';
-import { useMatches } from '@/features/results/useMatches';
+import { useMatches } from '@/features/matches/useMatches';
 import type { MatchFilter, MatchSort } from '@/features/results/types';
 
 const sortLabels: Record<MatchSort, string> = {

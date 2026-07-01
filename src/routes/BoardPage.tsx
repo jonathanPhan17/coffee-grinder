@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { BoardWorkspace } from '@/features/board/BoardWorkspace';
-import { useMatches } from '@/features/results/useMatches';
+import { useMatches } from '@/features/matches/useMatches';
 
 export function BoardPage() {
   // Board is the user's whole pipeline; the real backend would scope this by

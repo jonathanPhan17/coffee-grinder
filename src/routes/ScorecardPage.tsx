@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { CriteriaGroup } from '@/features/scorecard/CriteriaGroup';
 import { GapCallout } from '@/features/scorecard/GapCallout';
 import { ScoreHeader } from '@/features/scorecard/ScoreHeader';
-import { useMatch } from '@/features/scorecard/useMatch';
+import { useMatch } from '@/features/matches/useMatch';
 
 export function ScorecardPage() {
   const { matchId } = useParams();
