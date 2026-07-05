@@ -18,35 +18,41 @@ function delay<T>(value: T, ms = 400): Promise<T> {
 // then just call the real API (the commented client.* lines below).
 const SIM_FETCH_MS = 1500;
 const SIM_TOTAL_MS = 9000;
-const runSim = new Map<string, { start: number; count: number }>();
+type Sim = { start: number; count: number; failed: number };
+const runSim = new Map<string, Sim>();
 
-function ensureSim(id: string): { start: number; count: number } {
+function ensureSim(id: string): Sim {
   let sim = runSim.get(id);
   if (!sim) {
-    sim = { start: Date.now(), count: mockRun.count };
+    sim = { start: Date.now(), count: mockRun.count, failed: 0 };
     runSim.set(id, sim);
   }
   return sim;
 }
 
 function simulateRun(id: string): Run {
-  const { start, count } = ensureSim(id);
+  const { start, count, failed } = ensureSim(id);
   const elapsed = Date.now() - start;
+  const scorable = Math.max(0, count - failed); // postings that will actually score
 
   let status: Run['status'];
   let screened: number;
+  let failedSoFar: number;
   if (elapsed < SIM_FETCH_MS) {
     status = 'fetching';
     screened = 0;
+    failedSoFar = 0;
   } else if (elapsed < SIM_TOTAL_MS) {
     status = 'screening';
     const ratio = (elapsed - SIM_FETCH_MS) / (SIM_TOTAL_MS - SIM_FETCH_MS);
-    screened = Math.min(count, Math.floor(ratio * count));
+    screened = Math.min(scorable, Math.floor(ratio * scorable));
+    failedSoFar = failed; // the failures surface once screening begins
   } else {
     status = 'done';
-    screened = count;
+    screened = scorable;
+    failedSoFar = failed;
   }
-  return { ...mockRun, id, status, count, screened };
+  return { ...mockRun, id, status, count, screened, failed: failedSoFar };
 }
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -59,9 +65,12 @@ export function startRun(input: {
 }): Promise<Run> {
   if (MOCK) {
     // MOCK: register a simulated run; the real call is the commented line below.
+    // Demo hook: a query containing "fail" trips 2 failed postings so the results-screen
+    // banner is exercisable on demand; any other query stays a clean run.
     const id = `run_${Date.now()}`;
-    runSim.set(id, { start: Date.now(), count: input.count });
-    return delay({ ...mockRun, ...input, id, status: 'queued', screened: 0 });
+    const failed = /fail/i.test(input.query) ? 2 : 0;
+    runSim.set(id, { start: Date.now(), count: input.count, failed });
+    return delay({ ...mockRun, ...input, id, status: 'queued', screened: 0, failed: 0 });
   }
   // return client.post<Run>('/runs', input).then((r) => r.data);
   throw new Error('not implemented');

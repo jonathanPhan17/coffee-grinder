@@ -34,14 +34,16 @@ export function RunSteps({ run }: RunStepsProps) {
   const status = run?.status ?? 'queued';
   const count = run?.count ?? 0;
   const screened = run?.screened ?? 0;
+  const failed = run?.failed ?? 0;
+  const processed = screened + failed; // postings the pipeline has finished with, success or not
   const inScreening = status === 'screening';
   const done = status === 'done';
-  const queued = Math.max(0, count - screened - 1);
+  const queued = Math.max(0, count - processed - 1);
   const company =
-    mockMatches[screened % mockMatches.length]?.posting.company ?? 'a role';
+    mockMatches[processed % mockMatches.length]?.posting.company ?? 'a role';
 
   const fetchState: StepState = inScreening || done ? 'done' : 'active';
-  const parseState: StepState = done || (inScreening && screened > 0)
+  const parseState: StepState = done || (inScreening && processed > 0)
     ? 'done'
     : inScreening
       ? 'active'
@@ -49,9 +51,11 @@ export function RunSteps({ run }: RunStepsProps) {
   const scoreState: StepState = done ? 'done' : inScreening ? 'active' : 'pending';
 
   const scoreLabel = done
-    ? `Scored all ${count} roles`
+    ? failed > 0
+      ? `Scored ${screened} of ${count} roles`
+      : `Scored all ${count} roles`
     : inScreening
-      ? `Scoring ${company} (job ${Math.min(count, screened + 1)})`
+      ? `Scoring ${company} (job ${Math.min(count, processed + 1)})`
       : 'Scoring roles';
 
   return (
