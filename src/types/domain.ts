@@ -36,6 +36,8 @@ export interface Run {
   remote?: boolean;
   /** How many have finished screening so far (for the brewing progress UI). */
   screened?: number;
+  /** Postings the pipeline couldn't screen and skipped (surfaced as a results banner). */
+  failed?: number;
   createdAt: string;
 }
 

@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { CoffeeIcon, WarningIcon } from '@phosphor-icons/react';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { FilterSortBar } from '@/features/results/FilterSortBar';
 import { MatchCard } from '@/features/results/MatchCard';
 import { MatchListSkeleton } from '@/features/results/MatchListSkeleton';
 import { useMatches } from '@/features/matches/useMatches';
+import { useRunStatus } from '@/features/runs/useRunStatus';
 import type { MatchFilter, MatchSort } from '@/features/results/types';
 
 const sortLabels: Record<MatchSort, string> = {
@@ -25,6 +27,9 @@ export function ResultsPage() {
   const [sort, setSort] = useState<MatchSort>('best');
 
   const { data: matches, isPending, isError, refetch } = useMatches(runId ?? '');
+  const { data: run } = useRunStatus(runId ?? '');
+  const failed = run?.failed ?? 0;
+  const runCount = run?.count ?? 0;
 
   const visible = useMemo(() => {
     if (!matches) return [];
@@ -66,6 +71,18 @@ export function ResultsPage() {
             : undefined
         }
       />
+
+      {!isError && failed > 0 && (
+        <Card className="flex items-center gap-3 border-warning">
+          <WarningIcon size={22} weight="fill" className="shrink-0 text-warning" />
+          <span className="text-sm text-text-secondary">
+            <span className="font-semibold text-text">
+              {failed} of {runCount} postings
+            </span>{' '}
+            could not be screened and are not included in these results.
+          </span>
+        </Card>
+      )}
 
       {isPending ? (
         <MatchListSkeleton />

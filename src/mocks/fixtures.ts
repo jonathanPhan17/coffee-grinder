@@ -34,6 +34,7 @@ export const mockRun: Run = {
   location: 'United States',
   remote: true,
   screened: 20,
+  failed: 0,
   createdAt: '2026-06-27T14:00:00.000Z',
 };
 

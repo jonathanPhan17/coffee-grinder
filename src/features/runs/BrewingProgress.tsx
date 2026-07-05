@@ -8,14 +8,16 @@ interface BrewingProgressProps {
 export function BrewingProgress({ run }: BrewingProgressProps) {
   const count = run?.count ?? 0;
   const screened = run?.screened ?? 0;
-  const pct = count ? Math.round((screened / count) * 100) : 0;
+  const failed = run?.failed ?? 0;
+  const processed = screened + failed; // scored or skipped — either way the pipeline is done with it
+  const pct = count ? Math.round((processed / count) * 100) : 0;
   const status = run?.status ?? 'queued';
 
   const heading =
     status === 'done'
       ? 'All matches brewed!'
       : status === 'screening'
-        ? `Screening job ${Math.min(count, screened + 1)} of ${count}…`
+        ? `Screening job ${Math.min(count, processed + 1)} of ${count}…`
         : 'Fetching postings…';
 
   return (
