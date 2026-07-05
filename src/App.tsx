@@ -1,13 +1,31 @@
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router';
 import { AppShell } from '@/components/layout/AppShell';
-import { UploadPage } from '@/routes/UploadPage';
-import { RunSetupPage } from '@/routes/RunSetupPage';
-import { RunStatusPage } from '@/routes/RunStatusPage';
-import { ResultsPage } from '@/routes/ResultsPage';
-import { ScorecardPage } from '@/routes/ScorecardPage';
-import { CoverLetterPage } from '@/routes/CoverLetterPage';
-import { BoardPage } from '@/routes/BoardPage';
-import { NotFoundPage } from '@/routes/NotFoundPage';
+
+const UploadPage = lazy(() =>
+  import('@/routes/UploadPage').then((m) => ({ default: m.UploadPage })),
+);
+const RunSetupPage = lazy(() =>
+  import('@/routes/RunSetupPage').then((m) => ({ default: m.RunSetupPage })),
+);
+const RunStatusPage = lazy(() =>
+  import('@/routes/RunStatusPage').then((m) => ({ default: m.RunStatusPage })),
+);
+const ResultsPage = lazy(() =>
+  import('@/routes/ResultsPage').then((m) => ({ default: m.ResultsPage })),
+);
+const ScorecardPage = lazy(() =>
+  import('@/routes/ScorecardPage').then((m) => ({ default: m.ScorecardPage })),
+);
+const CoverLetterPage = lazy(() =>
+  import('@/routes/CoverLetterPage').then((m) => ({ default: m.CoverLetterPage })),
+);
+const BoardPage = lazy(() =>
+  import('@/routes/BoardPage').then((m) => ({ default: m.BoardPage })),
+);
+const NotFoundPage = lazy(() =>
+  import('@/routes/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
+);
 
 function App() {
   return (

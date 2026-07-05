@@ -5,7 +5,7 @@
  * each derived its own colors/labels they would drift and break the semantic-
  * color rules. Everything visual about those values is decided here.
  */
-import type { FitTier, Verdict } from '@/types/domain';
+import type { CriterionGroup, FitTier, Verdict } from '@/types/domain';
 import type { Tone } from '@/types/ui';
 
 export function scoreTone(score: number): Tone {
@@ -19,6 +19,17 @@ export const verdictDisplay: Record<Verdict, { label: string; tone: Tone }> = {
   partial: { label: 'Partial', tone: 'warning' },
   not_met: { label: 'Not met', tone: 'danger' },
 };
+
+/** A met dealbreaker reads as "Cleared"; otherwise the verdict's own badge. */
+export function criterionBadge(
+  group: CriterionGroup,
+  verdict: Verdict,
+): { label: string; tone: Tone } {
+  if (group === 'dealbreaker' && verdict === 'met') {
+    return { label: 'Cleared', tone: 'success' };
+  }
+  return verdictDisplay[verdict];
+}
 
 /** Fit tier → label only; the color comes from scoreTone(score) so it never
  *  contradicts the numeric score. */
