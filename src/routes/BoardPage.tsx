@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { BoardWorkspace } from '@/features/board/BoardWorkspace';
 import { useMatches } from '@/features/matches/useMatches';
 
-export function BoardPage() {
+export default function BoardPage() {
   // Board is the user's whole pipeline; the real backend would scope this by
   // user/status. The mock reuses the demo run's matches.
   const { data: matches, isPending, isError, refetch } = useMatches('run_demo');

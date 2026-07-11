@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { CoverLetterWorkspace } from '@/features/coverletter/CoverLetterWorkspace';
 import { useMatch } from '@/features/matches/useMatch';
 
-export function CoverLetterPage() {
+export default function CoverLetterPage() {
   const { matchId } = useParams();
   const navigate = useNavigate();
   const { data: match, isPending, isError, refetch } = useMatch(matchId ?? '');

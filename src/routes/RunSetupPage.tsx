@@ -15,7 +15,7 @@ import { RunSetupForm, type RunSource } from '@/features/runs/RunSetupForm';
 import { useStartRun } from '@/features/runs/useStartRun';
 import { useResume } from '@/features/resume/useResume';
 
-export function RunSetupPage() {
+export default function RunSetupPage() {
   const navigate = useNavigate();
   const { profile } = useResume();
   const { mutate, isPending } = useStartRun();

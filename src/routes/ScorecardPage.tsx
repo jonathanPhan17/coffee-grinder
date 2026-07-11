@@ -14,7 +14,7 @@ import { GapCallout } from '@/features/scorecard/GapCallout';
 import { ScoreHeader } from '@/features/scorecard/ScoreHeader';
 import { useMatch } from '@/features/matches/useMatch';
 
-export function ScorecardPage() {
+export default function ScorecardPage() {
   const { matchId } = useParams();
   const navigate = useNavigate();
   const { data: match, isPending, isError, refetch } = useMatch(matchId ?? '');

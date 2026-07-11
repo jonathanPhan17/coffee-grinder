@@ -8,7 +8,7 @@ import { RunSteps } from '@/features/runs/RunSteps';
 import { useRunStatus } from '@/features/runs/useRunStatus';
 import { useResume } from '@/features/resume/useResume';
 
-export function RunStatusPage() {
+export default function RunStatusPage() {
   const { runId } = useParams();
   const navigate = useNavigate();
   const { profile } = useResume();

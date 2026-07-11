@@ -9,7 +9,7 @@ import { UploadStepper } from '@/features/resume/UploadStepper';
 import { useResume } from '@/features/resume/useResume';
 import { useResumeUpload } from '@/features/resume/useResumeUpload';
 
-export function UploadPage() {
+export default function UploadPage() {
   const navigate = useNavigate();
   const { profile, clearProfile } = useResume();
   const { status, error, upload } = useResumeUpload();

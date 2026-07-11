@@ -18,7 +18,7 @@ const sortLabels: Record<MatchSort, string> = {
   company: 'Company',
 };
 
-export function ResultsPage() {
+export default function ResultsPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const runId = params.get('run');
