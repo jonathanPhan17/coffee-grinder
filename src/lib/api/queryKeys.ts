@@ -12,6 +12,7 @@ export const queryKeys = {
   },
   matches: {
     all: ['matches'] as const,
+    board: ['matches', 'board'] as const,
     list: (runId: string) => ['matches', 'list', runId] as const,
     detail: (matchId: string) => ['matches', 'detail', matchId] as const,
   },

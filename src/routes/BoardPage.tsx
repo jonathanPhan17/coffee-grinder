@@ -4,12 +4,10 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { BoardWorkspace } from '@/features/board/BoardWorkspace';
-import { useMatches } from '@/features/matches/useMatches';
+import { useAllMatches } from '@/features/matches/useAllMatches';
 
 export default function BoardPage() {
-  // Board is the user's whole pipeline; the real backend would scope this by
-  // user/status. The mock reuses the demo run's matches.
-  const { data: matches, isPending, isError, refetch } = useMatches('run_demo');
+  const { data: matches, isPending, isError, refetch } = useAllMatches();
 
   return (
     <div className="flex flex-col gap-6">
