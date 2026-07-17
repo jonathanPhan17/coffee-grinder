@@ -18,7 +18,9 @@ export function KanbanColumn({ status, label, icon, matches }: KanbanColumnProps
     <div
       ref={setNodeRef}
       className={cn(
-        'flex w-72 shrink-0 flex-col gap-3 rounded-lg border border-border bg-surface p-3 transition-colors',
+        // Columns split the row evenly (flex-1 from basis 0) down to a floor that
+        // keeps cards readable; past the floor the row falls back to x-scroll.
+        'flex min-h-0 min-w-52 flex-1 flex-col gap-3 rounded-lg border border-border bg-surface p-3 transition-colors',
         isOver && 'border-accent bg-elevated',
       )}
     >
@@ -30,7 +32,7 @@ export function KanbanColumn({ status, label, icon, matches }: KanbanColumnProps
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2">
+      <div className="scrollbar-slim flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
         {matches.map((m) => (
           <JobCardCompact key={m.id} match={m} />
         ))}

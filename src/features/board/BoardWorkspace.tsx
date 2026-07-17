@@ -1,11 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import {
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core';
 import {
   BookmarkSimpleIcon,
@@ -15,6 +17,7 @@ import {
   TrophyIcon,
   XCircleIcon,
 } from '@phosphor-icons/react';
+import { JobCardFace } from './JobCardCompact';
 import { KanbanColumn } from './KanbanColumn';
 import { useUpdateStatus } from './useUpdateStatus';
 import type { Match, PipelineStatus } from '@/types/domain';
@@ -34,13 +37,22 @@ interface BoardWorkspaceProps {
 
 export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
   const [items, setItems] = useState<Match[]>(matches);
+  // The card under the pointer, rendered in the DragOverlay portal — the source
+  // card cannot follow the pointer itself without clipping inside its column's
+  // scroll container.
+  const [activeMatch, setActiveMatch] = useState<Match | null>(null);
   const { mutate } = useUpdateStatus();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor),
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveMatch(items.find((m) => m.id === String(event.active.id)) ?? null);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveMatch(null);
     const { active, over } = event;
     if (!over) return;
     const matchId = String(active.id);
@@ -55,8 +67,13 @@ export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
   };
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-2">
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={() => setActiveMatch(null)}
+    >
+      <div className="flex min-h-0 flex-1 gap-4 overflow-x-auto pb-2">
         {columns.map((col) => (
           <KanbanColumn
             key={col.status}
@@ -67,6 +84,9 @@ export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
           />
         ))}
       </div>
+      <DragOverlay>
+        {activeMatch && <JobCardFace match={activeMatch} className="cursor-grabbing" />}
+      </DragOverlay>
     </DndContext>
   );
 }

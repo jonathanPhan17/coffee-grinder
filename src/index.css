@@ -29,6 +29,12 @@
   --breakpoint-xs: 400px;
 }
 
+/* Slim, theme-tinted scrollbar for panes that scroll inside the page (kanban columns). */
+@utility scrollbar-slim {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
 /* Dark roast — default */
 :root {
   --bg: #1e1611;
