@@ -41,6 +41,21 @@ export default function RunStatusPage() {
       />
     );
   }
+  if (run?.status === 'error') {
+    return (
+      <EmptyState
+        icon={<WarningIcon size={28} weight="fill" />}
+        title="This run could not finish"
+        description="The run ended with an error before screening completed. Start a fresh run to try again."
+        action={
+          <Button onClick={() => navigate('/runs/new')}>
+            <ArrowClockwiseIcon size={16} weight="bold" />
+            Start a new run
+          </Button>
+        }
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
