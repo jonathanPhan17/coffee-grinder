@@ -1,75 +1,66 @@
-# React + TypeScript + Vite
+# Coffee Grinder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI job-matching tool: upload a resume, point it at a batch of job postings, and get
+an explainable scorecard for each one — every score backed by evidence quotes pulled
+from the actual resume and posting, not a black-box number.
 
-Currently, two official plugins are available:
+This repo is the web app, built with **React 19 + TypeScript + Vite**, styled with
+Tailwind CSS. The backend — a Node.js/TypeScript serverless API on AWS (Lambda, Step
+Functions, DynamoDB, Amazon Bedrock) — lives in
+[coffeegrinder-backend](https://github.com/jonathanPhan17/coffeegrinder-backend).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Screens
 
-## React Compiler
+- **Upload** — drop in a resume; the backend parses it into a profile.
+- **Run setup** — choose the job search (query, location, how many postings to screen).
+- **Run status** — live progress while the pipeline fetches and scores postings.
+- **Results** — the scored matches for a run, best first.
+- **Scorecard** — one match in detail: per-criterion scores with the evidence quotes
+  behind each one.
+- **Board** — a pipeline view of every match across runs, with drag-and-drop status
+  (saved / applied / interviewing / …).
+- **Cover letter** — tailored draft cover letters for a match.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## How it talks to the backend
 
-## Expanding the ESLint configuration
+All server calls go through one place: `src/lib/api/`. An axios client points at the
+backend API (`VITE_API_URL`), `endpoints.ts` holds one typed function per endpoint, and
+TanStack React Query handles caching, polling, and loading/error state. The TypeScript
+shapes for everything the API returns live in `src/types/` — the same shapes the backend
+serves.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Commands
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev      # local dev server (Vite)
+npm run build    # typecheck (tsc -b) + production build
+npm run lint     # ESLint
+npm run preview  # serve the production build locally
+npm run deploy   # build, sync dist/ to the site's S3 bucket, invalidate CloudFront
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+For local dev, create a `.env.local` with `VITE_API_URL=<backend API URL>` so the app
+has an API to talk to. Deploys read `DEPLOY_STACK` from `.env.production` and pull the
+bucket, CloudFront distribution, and site URL from that stack's CloudFormation outputs,
+so the deploy script carries no per-environment values.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Folder structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```
+coffeegrinder-frontend/
+├── src/
+│   ├── routes/            # one file per screen — the pages the router renders
+│   ├── features/          # the building blocks of each screen, grouped by feature
+│   │                      #   (resume, runs, matches, results, scorecard, board, coverletter)
+│   ├── components/        # shared UI pieces used across features
+│   ├── lib/
+│   │   ├── api/           # axios client, typed endpoint functions, React Query setup
+│   │   ├── theme/         # colors and fonts
+│   │   └── utils/         # small helpers
+│   ├── mocks/             # fixture data (only cover-letter drafts still use it)
+│   └── types/             # TypeScript shapes shared with the backend API
+├── scripts/
+│   └── deploy.mjs         # ships the built app to the live site (S3 + CloudFront)
+└── vite.config.ts
 ```
