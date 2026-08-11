@@ -49,8 +49,8 @@ export function RunSteps({ run }: RunStepsProps) {
 
   const scoreLabel = done
     ? failed > 0
-      ? `Scored ${screened} of ${count} roles`
-      : `Scored all ${count} roles`
+      ? `Scored ${screened} of ${count} role${count === 1 ? '' : 's'}`
+      : `Scored all ${count} role${count === 1 ? '' : 's'}`
     : inScreening
       ? // The run API doesn't say which posting is being scored, so show the
         // position only — never a made-up company name.
@@ -59,11 +59,11 @@ export function RunSteps({ run }: RunStepsProps) {
 
   return (
     <Card className="flex flex-col divide-y divide-border">
-      <StepRow state={fetchState} label={`Fetched ${count} postings`} />
-      <StepRow state={parseState} label={`Parsed requirements for ${count} roles`} />
+      <StepRow state={fetchState} label={`Fetched ${count} posting${count === 1 ? '' : 's'}`} />
+      <StepRow state={parseState} label={`Parsed requirements for ${count} role${count === 1 ? '' : 's'}`} />
       <StepRow state={scoreState} label={scoreLabel} />
       {inScreening && queued > 0 && (
-        <StepRow state="pending" label={`${queued} roles queued`} />
+        <StepRow state="pending" label={`${queued} role${queued === 1 ? '' : 's'} queued`} />
       )}
     </Card>
   );

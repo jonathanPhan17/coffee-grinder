@@ -316,9 +316,9 @@ export default function GalleryPage() {
         note="The run-in-flight states you normally cannot revisit without paying for a run."
       >
         <div className="flex flex-col gap-6">
-          <BrewingProgress run={mkRun({ status: 'fetching', count: 8 })} />
-          <BrewingProgress run={mkRun({ status: 'screening', count: 8, screened: 3 })} />
-          <BrewingProgress run={mkRun({ status: 'done', count: 8, screened: 8 })} />
+          <BrewingProgress run={mkRun({ status: 'fetching', count: 5 })} />
+          <BrewingProgress run={mkRun({ status: 'screening', count: 5, screened: 3 })} />
+          <BrewingProgress run={mkRun({ status: 'done', count: 5, screened: 5 })} />
         </div>
       </Section>
 
@@ -327,8 +327,8 @@ export default function GalleryPage() {
         note="Mid-screening and finished-with-failures. The mid-run label shows the job position only — the run API doesn't say which posting is being scored."
       >
         <div className="flex flex-col gap-4">
-          <RunSteps run={mkRun({ status: 'screening', count: 20, screened: 6, failed: 1 })} />
-          <RunSteps run={mkRun({ status: 'done', count: 20, screened: 18, failed: 2 })} />
+          <RunSteps run={mkRun({ status: 'screening', count: 5, screened: 2, failed: 1 })} />
+          <RunSteps run={mkRun({ status: 'done', count: 5, screened: 4, failed: 1 })} />
         </div>
       </Section>
 
