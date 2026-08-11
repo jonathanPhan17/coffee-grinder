@@ -324,7 +324,7 @@ export default function GalleryPage() {
 
       <Section
         title="Run steps"
-        note="Mid-screening and finished-with-failures. (Known bug, on purpose here: the company name mid-run comes from mock data.)"
+        note="Mid-screening and finished-with-failures. The mid-run label shows the job position only — the run API doesn't say which posting is being scored."
       >
         <div className="flex flex-col gap-4">
           <RunSteps run={mkRun({ status: 'screening', count: 20, screened: 6, failed: 1 })} />
