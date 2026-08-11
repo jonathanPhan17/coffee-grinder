@@ -35,7 +35,9 @@ export function GapCallout({ evidence }: GapCalloutProps) {
       </div>
       <div className="flex flex-wrap gap-2">
         {gaps.map((g) => {
-          const badge = criterionBadge(g.group, g.verdict);
+          // An unconfirmable dealbreaker stays in the list (it IS worth a look
+          // before applying) but shows amber "Can't confirm", not red "Not met".
+          const badge = criterionBadge(g);
           return (
             <span
               key={g.id}
@@ -44,7 +46,7 @@ export function GapCallout({ evidence }: GapCalloutProps) {
               <span
                 className={cn(
                   'size-1.5 rounded-full',
-                  g.verdict === 'partial' ? 'bg-warning' : 'bg-danger',
+                  badge.tone === 'warning' ? 'bg-warning' : 'bg-danger',
                 )}
               />
               {g.criterion} · {badge.label}

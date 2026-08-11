@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { CriterionRow } from './CriterionRow';
+import { isUnconfirmedDealbreaker } from '@/lib/presentation';
 import type { CriterionEvidence } from '@/types/domain';
 
 interface CriteriaGroupProps {
@@ -13,10 +14,16 @@ export function CriteriaGroup({ title, icon, items }: CriteriaGroupProps) {
 
   const met = items.filter((i) => i.verdict === 'met').length;
   const partial = items.filter((i) => i.verdict === 'partial').length;
-  const summary =
-    partial > 0
-      ? `${met} of ${items.length} met · ${partial} partial`
-      : `${met} of ${items.length} met`;
+  // Unconfirmable dealbreakers ("couldn't tell from the résumé") are not failures,
+  // so they leave the met/not-met tally and get their own count.
+  const unconfirmed = items.filter(isUnconfirmedDealbreaker).length;
+  const tallied = items.length - unconfirmed;
+  const parts = [
+    tallied > 0 ? `${met} of ${tallied} met` : '',
+    partial > 0 ? `${partial} partial` : '',
+    unconfirmed > 0 ? `${unconfirmed} can't be confirmed` : '',
+  ].filter(Boolean);
+  const summary = parts.join(' · ');
 
   return (
     <section className="flex flex-col gap-3">
