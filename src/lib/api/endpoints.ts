@@ -1,9 +1,47 @@
-import type { CoverLetterDraft, Match, Run } from '@/types/domain';
+import axios from 'axios';
+import type { CoverLetterDraft, Match, ResumeProfile, Run } from '@/types/domain';
 import { mockCoverLetterDrafts } from '@/mocks/fixtures';
 import { client } from './client';
 
 function delay<T>(value: T, ms = 400): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
+}
+
+/** POST /resume — mint a presigned S3 upload URL and register the pending profile. */
+export function createResumeUpload(input: {
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+}): Promise<{ uploadUrl: string; key: string }> {
+  return client
+    .post<{ uploadUrl: string; key: string }>('/resume', input)
+    .then((r) => r.data);
+}
+
+/**
+ * PUT the file straight to S3 with the presigned URL. Bare axios, not `client`:
+ * different origin, and the signature only matches a request carrying exactly the
+ * content-type and byte size declared to POST /resume.
+ */
+export function uploadResumeFile(
+  uploadUrl: string,
+  file: File,
+  contentType: string,
+): Promise<void> {
+  return axios
+    .put(uploadUrl, file, { headers: { 'Content-Type': contentType } })
+    .then(() => undefined);
+}
+
+/** GET /resume — the stored profile; null before the first upload (404). */
+export function getResumeProfile(): Promise<ResumeProfile | null> {
+  return client
+    .get<ResumeProfile>('/resume')
+    .then((r) => r.data)
+    .catch((err: unknown) => {
+      if (axios.isAxiosError(err) && err.response?.status === 404) return null;
+      throw err;
+    });
 }
 
 /** POST /runs — start a screening run, returns the run id. */

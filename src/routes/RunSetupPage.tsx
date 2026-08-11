@@ -17,7 +17,7 @@ import { useResume } from '@/features/resume/useResume';
 
 export default function RunSetupPage() {
   const navigate = useNavigate();
-  const { profile } = useResume();
+  const { profile, isHydrating } = useResume();
   const { mutate, isPending } = useStartRun();
 
   const [query, setQuery] = useState('');
@@ -26,6 +26,8 @@ export default function RunSetupPage() {
   const [source, setSource] = useState<RunSource>('auto');
   const [count, setCount] = useState(20);
 
+  // On a refresh the stored profile is still being fetched — wait, don't bounce.
+  if (isHydrating) return null;
   if (!profile) return <Navigate to="/" replace />;
 
   const handleStart = () => {
