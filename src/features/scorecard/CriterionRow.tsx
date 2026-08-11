@@ -3,12 +3,17 @@ import { CaretDownIcon, QuotesIcon, SparkleIcon } from '@phosphor-icons/react';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils/cn';
 import { confidenceLabel, criterionBadge } from '@/lib/presentation';
-import type { CriterionEvidence, Verdict } from '@/types/domain';
+import type { CriterionEvidence } from '@/types/domain';
+import type { Tone } from '@/types/ui';
 
-const borderByVerdict: Record<Verdict, string> = {
-  met: 'border-l-success',
-  partial: 'border-l-warning',
-  not_met: 'border-l-danger',
+// Keyed off the badge tone so the accent stripe can never disagree with the badge
+// (e.g. an unconfirmable dealbreaker is amber in both, not amber badge + red stripe).
+const borderByTone: Record<Tone, string> = {
+  accent: 'border-l-accent',
+  success: 'border-l-success',
+  warning: 'border-l-warning',
+  danger: 'border-l-danger',
+  neutral: 'border-l-border',
 };
 
 interface CriterionRowProps {
@@ -16,7 +21,7 @@ interface CriterionRowProps {
 }
 
 export function CriterionRow({ evidence }: CriterionRowProps) {
-  const badge = criterionBadge(evidence.group, evidence.verdict);
+  const badge = criterionBadge(evidence);
   // Auto-expand gaps so what is missing is visible immediately.
   const [open, setOpen] = useState(evidence.verdict !== 'met');
 
@@ -24,7 +29,7 @@ export function CriterionRow({ evidence }: CriterionRowProps) {
     <div
       className={cn(
         'rounded-md border border-l-4 border-border bg-bg',
-        borderByVerdict[evidence.verdict],
+        borderByTone[badge.tone],
       )}
     >
       <button

@@ -20,15 +20,39 @@ export const verdictDisplay: Record<Verdict, { label: string; tone: Tone }> = {
   not_met: { label: 'Not met', tone: 'danger' },
 };
 
-/** A met dealbreaker reads as "Cleared"; otherwise the verdict's own badge. */
-export function criterionBadge(
-  group: CriterionGroup,
-  verdict: Verdict,
-): { label: string; tone: Tone } {
-  if (group === 'dealbreaker' && verdict === 'met') {
+/**
+ * Mirrors the backend's dealbreaker cap gate (score.ts DEALBREAKER_CONFIDENCE):
+ * below this confidence a not_met dealbreaker did NOT cap the score — the model
+ * couldn't verify it from the résumé ("unknown"), it didn't find a violation.
+ */
+const DEALBREAKER_CONFIDENCE = 0.7;
+
+/** True when a dealbreaker miss means "couldn't tell", not "failed". */
+export function isUnconfirmedDealbreaker(e: {
+  group: CriterionGroup;
+  verdict: Verdict;
+  confidence: number;
+}): boolean {
+  return (
+    e.group === 'dealbreaker' && e.verdict === 'not_met' && e.confidence < DEALBREAKER_CONFIDENCE
+  );
+}
+
+/** A met dealbreaker reads as "Cleared"; an unconfirmable one as "Can't confirm"
+ *  (amber, matching the fact that it didn't cap the score); otherwise the
+ *  verdict's own badge. */
+export function criterionBadge(e: {
+  group: CriterionGroup;
+  verdict: Verdict;
+  confidence: number;
+}): { label: string; tone: Tone } {
+  if (e.group === 'dealbreaker' && e.verdict === 'met') {
     return { label: 'Cleared', tone: 'success' };
   }
-  return verdictDisplay[verdict];
+  if (isUnconfirmedDealbreaker(e)) {
+    return { label: "Can't confirm", tone: 'warning' };
+  }
+  return verdictDisplay[e.verdict];
 }
 
 /** Fit tier → label only; the color comes from scoreTone(score) so it never
