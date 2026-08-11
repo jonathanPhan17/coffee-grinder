@@ -11,7 +11,7 @@ import { useResume } from '@/features/resume/useResume';
 export default function RunStatusPage() {
   const { runId } = useParams();
   const navigate = useNavigate();
-  const { profile } = useResume();
+  const { profile, isHydrating } = useResume();
   const { data: run, isError, refetch } = useRunStatus(runId ?? '');
 
   useEffect(() => {
@@ -24,6 +24,8 @@ export default function RunStatusPage() {
     }
   }, [profile, run?.status, runId, navigate]);
 
+  // On a refresh the stored profile is still being fetched — wait, don't bounce.
+  if (isHydrating) return null;
   if (!runId || !profile) return <Navigate to="/" replace />;
 
   if (isError) {

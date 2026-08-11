@@ -13,6 +13,7 @@ export default function UploadPage() {
   const navigate = useNavigate();
   const { profile, clearProfile } = useResume();
   const { status, error, upload } = useResumeUpload();
+  const busy = status === 'requesting' || status === 'uploading' || status === 'parsing';
 
   return (
     <div className="flex flex-col gap-8">
@@ -42,7 +43,12 @@ export default function UploadPage() {
           </div>
         </div>
       ) : (
-        <Dropzone onFile={upload} isParsing={status === 'parsing'} error={error} />
+        <Dropzone
+          onFile={upload}
+          isParsing={busy}
+          busyLabel={status === 'parsing' ? 'Grinding your résumé…' : 'Uploading your résumé…'}
+          error={error}
+        />
       )}
 
       <UploadStepper current={1} />

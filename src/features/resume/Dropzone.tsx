@@ -11,10 +11,12 @@ import { cn } from '@/lib/utils/cn';
 interface DropzoneProps {
   onFile: (file: File) => void;
   isParsing?: boolean;
+  /** Heading while busy — the upload flow swaps it per stage. */
+  busyLabel?: string;
   error?: string | null;
 }
 
-export function Dropzone({ onFile, isParsing, error }: DropzoneProps) {
+export function Dropzone({ onFile, isParsing, busyLabel, error }: DropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -52,10 +54,12 @@ export function Dropzone({ onFile, isParsing, error }: DropzoneProps) {
 
       <div className="flex flex-col gap-1">
         <h2 className="font-display text-xl font-semibold">
-          {isParsing ? 'Grinding your résumé…' : 'Drop your résumé to start the grind'}
+          {isParsing
+            ? (busyLabel ?? 'Grinding your résumé…')
+            : 'Drop your résumé to start the grind'}
         </h2>
         <p className="text-sm text-text-secondary">
-          Drag a file here, or browse — PDF or DOCX, up to 10 MB
+          Drag a file here, or browse — PDF, up to 10 MB
         </p>
       </div>
 
@@ -74,7 +78,7 @@ export function Dropzone({ onFile, isParsing, error }: DropzoneProps) {
       <input
         ref={inputRef}
         type="file"
-        accept=".pdf,.docx,application/pdf"
+        accept=".pdf,application/pdf"
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />

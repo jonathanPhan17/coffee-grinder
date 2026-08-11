@@ -6,6 +6,9 @@
  *   queryClient.invalidateQueries({ queryKey: queryKeys.matches.all })
  */
 export const queryKeys = {
+  resume: {
+    profile: ['resume'] as const,
+  },
   runs: {
     all: ['runs'] as const,
     detail: (runId: string) => ['runs', runId] as const,
