@@ -4,7 +4,6 @@ import {
   CircleNotchIcon,
 } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/Card';
-import { mockMatches } from '@/mocks/fixtures';
 import type { Run } from '@/types/domain';
 
 type StepState = 'done' | 'active' | 'pending';
@@ -39,8 +38,6 @@ export function RunSteps({ run }: RunStepsProps) {
   const inScreening = status === 'screening';
   const done = status === 'done';
   const queued = Math.max(0, count - processed - 1);
-  const company =
-    mockMatches[processed % mockMatches.length]?.posting.company ?? 'a role';
 
   const fetchState: StepState = inScreening || done ? 'done' : 'active';
   const parseState: StepState = done || (inScreening && processed > 0)
@@ -55,7 +52,9 @@ export function RunSteps({ run }: RunStepsProps) {
       ? `Scored ${screened} of ${count} roles`
       : `Scored all ${count} roles`
     : inScreening
-      ? `Scoring ${company} (job ${Math.min(count, processed + 1)})`
+      ? // The run API doesn't say which posting is being scored, so show the
+        // position only — never a made-up company name.
+        `Scoring job ${Math.min(count, processed + 1)} of ${count}`
       : 'Scoring roles';
 
   return (
