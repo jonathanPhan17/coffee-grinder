@@ -27,6 +27,19 @@
 
   /* Extra-small breakpoint */
   --breakpoint-xs: 400px;
+
+  /* Route enter: quick fade + rise. `backwards` (not `both`) so the transform
+   * is dropped once the animation ends — a lingering transform would become
+   * the containing block for position:fixed children like the board's
+   * DragOverlay and misplace them. */
+  --animate-page-in: page-in 180ms ease-out backwards;
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
 }
 
 /* Slim, theme-tinted scrollbar for panes that scroll inside the page (kanban columns). */

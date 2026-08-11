@@ -4,6 +4,7 @@ import { SpinnerGapIcon } from '@phosphor-icons/react';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { cn } from '@/lib/utils/cn';
 import { NavBar } from './NavBar';
+import { ScrollToTop } from './ScrollToTop';
 
 function RouteFallback() {
   return (
@@ -22,15 +23,18 @@ export function AppShell() {
 
   return (
     <div className={cn('flex flex-col bg-bg text-text', fitViewport ? 'h-svh' : 'min-h-svh')}>
+      <ScrollToTop />
       <NavBar />
+      {/* key=pathname remounts the subtree on navigation — replays the enter
+          animation and clears a crashed ErrorBoundary. */}
       <main
+        key={pathname}
         className={cn(
-          'w-full flex-1',
+          'w-full flex-1 motion-safe:animate-page-in',
           fitViewport ? 'flex min-h-0 flex-col px-6 py-6' : 'mx-auto max-w-6xl px-6 py-8',
         )}
       >
-        {/* key=pathname remounts the boundary on navigation, clearing a crashed screen */}
-        <ErrorBoundary key={pathname}>
+        <ErrorBoundary>
           <Suspense fallback={<RouteFallback />}>
             <Outlet />
           </Suspense>

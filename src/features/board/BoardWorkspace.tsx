@@ -15,6 +15,7 @@ import {
   PaperPlaneTiltIcon,
   SparkleIcon,
   TrophyIcon,
+  WarningIcon,
   XCircleIcon,
 } from '@phosphor-icons/react';
 import { JobCardFace } from './JobCardCompact';
@@ -41,6 +42,7 @@ export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
   // card cannot follow the pointer itself without clipping inside its column's
   // scroll container.
   const [activeMatch, setActiveMatch] = useState<Match | null>(null);
+  const [moveError, setMoveError] = useState<string | null>(null);
   const { mutate } = useUpdateStatus();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -60,10 +62,24 @@ export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
     const match = items.find((m) => m.id === matchId);
     if (!match || match.status === nextStatus) return;
 
+    setMoveError(null);
     setItems((prev) =>
       prev.map((m) => (m.id === matchId ? { ...m, status: nextStatus } : m)),
     );
-    mutate({ id: matchId, status: nextStatus });
+    mutate(
+      { id: matchId, status: nextStatus },
+      {
+        onError: () => {
+          // Put just this card back where it was — other in-flight moves stay.
+          setItems((prev) =>
+            prev.map((m) => (m.id === matchId ? { ...m, status: match.status } : m)),
+          );
+          setMoveError(`Could not move "${match.posting.title}" — it is back in ${
+            columns.find((c) => c.status === match.status)?.label ?? 'its column'
+          }.`);
+        },
+      },
+    );
   };
 
   return (
@@ -73,6 +89,15 @@ export function BoardWorkspace({ matches }: BoardWorkspaceProps) {
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveMatch(null)}
     >
+      {moveError && (
+        <div
+          role="alert"
+          className="mb-3 flex items-center gap-2 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger"
+        >
+          <WarningIcon size={16} weight="fill" className="shrink-0" />
+          {moveError}
+        </div>
+      )}
       <div className="flex min-h-0 flex-1 gap-4 overflow-x-auto pb-2">
         {columns.map((col) => (
           <KanbanColumn
