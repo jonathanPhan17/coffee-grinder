@@ -7,8 +7,8 @@ interface JobCountSliderProps {
 }
 
 function descriptor(count: number): string {
-  if (count <= 10) return 'quick grind';
-  if (count <= 30) return 'balanced grind';
+  if (count <= 2) return 'quick grind';
+  if (count <= 4) return 'balanced grind';
   return 'thorough grind';
 }
 
@@ -33,9 +33,9 @@ export function JobCountSlider({ value, onChange }: JobCountSliderProps) {
       <Slider.Root
         value={[value]}
         onValueChange={([next]) => onChange(next)}
-        min={5}
-        max={50}
-        step={5}
+        min={1}
+        max={5}
+        step={1}
         className="relative flex h-5 w-full items-center"
       >
         <Slider.Track className="relative h-1.5 grow rounded-full bg-elevated">
@@ -48,9 +48,9 @@ export function JobCountSlider({ value, onChange }: JobCountSliderProps) {
       </Slider.Root>
 
       <div className="flex justify-between text-xs text-text-secondary">
-        <span>5 · quick</span>
-        <span>25</span>
-        <span>50 · thorough</span>
+        <span>1 · quick</span>
+        <span>3</span>
+        <span>5 · thorough</span>
       </div>
     </div>
   );

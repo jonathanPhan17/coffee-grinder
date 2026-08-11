@@ -24,7 +24,7 @@ export default function RunSetupPage() {
   const [location, setLocation] = useState('United States');
   const [remote, setRemote] = useState(true);
   const [source, setSource] = useState<RunSource>('auto');
-  const [count, setCount] = useState(20);
+  const [count, setCount] = useState(5);
 
   // On a refresh the stored profile is still being fetched — wait, don't bounce.
   if (isHydrating) return null;
