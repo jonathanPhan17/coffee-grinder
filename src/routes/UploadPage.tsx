@@ -18,7 +18,7 @@ export default function UploadPage() {
   return (
     <div className="flex flex-col gap-8">
       <PageHeader
-        eyebrow={profile ? 'Résumé ready' : 'Welcome back, Alex'}
+        eyebrow={profile ? 'Résumé ready' : 'Fresh grounds'}
         title={
           profile
             ? 'Nicely brewed — we read your résumé.'

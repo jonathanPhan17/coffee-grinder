@@ -25,7 +25,9 @@ export function generateCoverLetter(match: Match, tone: CoverLetterTone): string
       `I would welcome the opportunity to discuss how I can contribute to ${company}. Thank you for your consideration.`,
       '',
       'Sincerely,',
-      'Alex Rivera',
+      // The template can't know the user's name (the profile stores no name field);
+      // an obvious fill-in slot beats a plausible-but-wrong guess in a sent letter.
+      '[Your name]',
     ].join('\n');
   }
 
@@ -39,7 +41,7 @@ export function generateCoverLetter(match: Match, tone: CoverLetterTone): string
     `I would love to bring that same care and energy to ${company}. Thank you for considering me — I would be thrilled to talk.`,
     '',
     'Warmly,',
-    'Alex Rivera',
+    '[Your name]',
   ].join('\n');
 }
 
