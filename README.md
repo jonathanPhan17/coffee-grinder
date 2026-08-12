@@ -11,6 +11,8 @@ Functions, DynamoDB, Amazon Bedrock) — lives in
 
 ## Screens
 
+- **Landing** (`/`, signed out) — the marketing page: what the product does, how it works,
+  free-tier terms.
 - **Upload** — drop in a resume; the backend parses it into a profile.
 - **Run setup** — choose the job search (query, location, how many postings to screen),
   and see how many free runs you have left this month.
@@ -21,6 +23,7 @@ Functions, DynamoDB, Amazon Bedrock) — lives in
 - **Board** — a pipeline view of every match across runs, with drag-and-drop status
   (saved / applied / interviewing / …).
 - **Cover letter** — tailored draft cover letters for a match.
+- **Terms / Privacy** (`/terms`, `/privacy`) — plain-language legal pages, publicly reachable.
 
 ## How it talks to the backend
 
@@ -55,6 +58,7 @@ coffeegrinder-frontend/
 │   ├── features/          # the building blocks of each screen, grouped by feature
 │   │                      #   (resume, runs, matches, results, scorecard, board, coverletter)
 │   ├── components/        # shared UI pieces used across features
+│   ├── assets/            # landing artwork — spot illustrations and the doodle tile
 │   ├── lib/
 │   │   ├── api/           # axios client, typed endpoint functions, React Query setup
 │   │   ├── theme/         # colors and fonts

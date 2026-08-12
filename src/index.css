@@ -2,7 +2,9 @@
 
 /*
  * Coffee Grinder — theme tokens.
- * Dark roast is the default (:root). Latte (light) is opt-in via `.latte` on <html>.
+ * :root holds the dark-roast values and `.latte` on <html> overrides them, but
+ * latte is the product default: a pre-paint script in index.html (mirrored by
+ * the ThemeProvider) adds `.latte` unless the user explicitly chose dark.
  */
 @theme {
   --color-bg: var(--bg);
@@ -40,6 +42,43 @@
       transform: translateY(4px);
     }
   }
+
+  /* Landing-page motion. `backwards` on rise for the same fixed-child reason
+   * as page-in; float/steam loop forever and live on decorative elements only. */
+  --animate-landing-rise: landing-rise 600ms ease-out backwards;
+  --animate-hero-float: hero-float 7s ease-in-out infinite;
+  --animate-steam: steam 2.6s ease-out infinite;
+
+  @keyframes landing-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes steam {
+    0% {
+      opacity: 0;
+      transform: translateY(4px) scaleY(0.85);
+    }
+    30% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-14px) scaleY(1.1);
+    }
+  }
 }
 
 /* Slim, theme-tinted scrollbar for panes that scroll inside the page (kanban columns). */
@@ -48,8 +87,12 @@
   scrollbar-color: var(--color-border) transparent;
 }
 
-/* Dark roast — default */
-:root {
+/* Dark roast — token values. `.roast-scope` reuses the same declarations to
+ * pin a region to dark roast regardless of the active theme (the landing's
+ * espresso band): custom properties resolve at the nearest declaration, so a
+ * scoped block beats the inherited `.latte` values without duplicating them. */
+:root,
+.roast-scope {
   --bg: #1e1611;
   --surface: #2c211a;
   --elevated: #3a2c22;
@@ -88,10 +131,42 @@
   color-scheme: light;
 }
 
+/* Plumbing for .roast-scope: Tailwind's @theme emits each --color-* on :root,
+ * where its var(--bg) resolves against the page theme — a scoped --bg override
+ * is invisible to utilities until the --color-* bindings are re-declared at
+ * the scope. Values live in the `:root, .roast-scope` block above. */
+.roast-scope {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-crema: var(--crema);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+}
+
 @layer base {
+  /* The landing's full-bleed bands are 100vw wide, which includes the
+   * scrollbar width. Both clips are needed: html alone propagates to the
+   * viewport where Chromium still allows programmatic sideways scroll, and
+   * body alone propagates away entirely. Together, html keeps body's clip
+   * local, and body — exactly the visible viewport wide — swallows the
+   * overshoot for real. clip, not hidden: no scroll container is created, so
+   * the sticky navbar and vertical scrolling are untouched, and fixed
+   * elements (the board's DragOverlay) are outside its reach. */
+  html {
+    overflow-x: clip;
+  }
+
   body {
     margin: 0;
     min-height: 100svh;
+    overflow-x: clip;
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-sans);

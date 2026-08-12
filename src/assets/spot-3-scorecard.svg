@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="160" viewBox="0 0 200 160">
+<ellipse cx="100" cy="146" rx="60" ry="5.5" fill="#d4a373"></ellipse>
+<rect x="54" y="22" width="92" height="120" rx="10" fill="#fbf7f2"></rect>
+<rect x="88" y="31" width="24" height="5" rx="2.5" fill="#b5651d"></rect>
+<circle cx="100" cy="72" r="21" stroke="#d4a373" stroke-width="6.5" fill="none"></circle>
+<path d="M 100,51 A 21,21 0 1 1 92.1,52.5" stroke="#5e7c5a" stroke-width="6.5" fill="none" stroke-linecap="round"></path>
+<text x="100" y="78" text-anchor="middle" font-family="Georgia, &#39;Times New Roman&#39;, serif" font-size="16.5" font-weight="700" fill="#3b2a20">94</text>
+<g>
+  <rect x="62" y="104" width="20" height="13" rx="6.5" fill="#5e7c5a"></rect>
+  <path d="M 68,110.5 L 70.8,113.2 L 76,107.7" stroke="#fbf7f2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="90" y="104" width="20" height="13" rx="6.5" fill="#5e7c5a"></rect>
+  <path d="M 96,110.5 L 98.8,113.2 L 104,107.7" stroke="#fbf7f2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="118" y="104" width="20" height="13" rx="6.5" fill="#5e7c5a"></rect>
+  <path d="M 124,110.5 L 126.8,113.2 L 132,107.7" stroke="#fbf7f2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<rect x="70" y="126" width="60" height="3.5" rx="1.75" fill="#3b2a20"></rect>
+<rect x="78" y="133" width="44" height="3.5" rx="1.75" fill="#3b2a20"></rect>
+<path d="M 86,18 C 90,13 82,8 86,2" stroke="#d4a373" stroke-width="3" fill="none" stroke-linecap="round"></path>
+<path d="M 110,20 C 114,15 106,10 110,4" stroke="#d4a373" stroke-width="3" fill="none" stroke-linecap="round"></path>
+</svg>

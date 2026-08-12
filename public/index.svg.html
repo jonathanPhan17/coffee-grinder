@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ティータイム・ローディング</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #fdfbf7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #6b4c3b;
+    }
+
+    .loader-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .svg-container {
+      width: 280px;
+      height: 240px;
+    }
+
+    /* --- アニメーション定義 --- */
+
+    /* 1. ポットの傾き */
+    .teapot {
+      transform-origin: 210px 100px;
+      animation: tiltPot 3s ease-in-out infinite;
+    }
+
+    @keyframes tiltPot {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      20%, 80% {
+        transform: rotate(-28deg);
+      }
+    }
+
+    /* 2. 注ぎ出るお茶の流線 */
+    .tea-stream {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: pourTea 3s ease-in-out infinite;
+    }
+
+    @keyframes pourTea {
+      0%, 15% {
+        stroke-dashoffset: 100;
+      }
+      25%, 75% {
+        stroke-dashoffset: 0;
+      }
+      85%, 100% {
+        stroke-dashoffset: -100;
+      }
+    }
+
+    /* 3. カップのお茶が溜まるアニメーション */
+    .tea-level {
+      animation: fillTea 3s ease-in-out infinite;
+    }
+
+    @keyframes fillTea {
+      0%, 20% {
+        transform: translateY(40px); /* 空の状態 */
+      }
+      75%, 85% {
+        transform: translateY(0px);  /* 満杯の状態 */
+      }
+      100% {
+        transform: translateY(40px); /* リセット */
+      }
+    }
+
+    /* テキストアニメーション */
+    .loading-text {
+      margin-top: 15px;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      animation: pulseText 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseText {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loader-container">
+    <div class="svg-container">
+      <svg viewBox="0 0 280 240" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        
+        <!-- カップのクリッピングマスク（カップの外にお茶がはみ出ないように設定） -->
+        <defs>
+          <clipPath id="cup-clip">
+            <!-- ティーカップの内部形状 -->
+            <path d="M 85,150 C 85,185 110,200 135,200 C 160,200 185,185 185,150 Z" />
+          </clipPath>
+        </defs>
+
+        <!-- ソーサー（受け皿） -->
+        <ellipse cx="135" cy="207" rx="60" ry="6" fill="#e0d6cb" />
+
+        <!-- カップ内の液体（マスク適用） -->
+        <g clip-path="url(#cup-clip)">
+          <!-- お茶の液面（波打ち効果付き） -->
+          <path class="tea-level" fill="#c87d55" d="M 70,150 Q 110,145 135,150 T 200,150 L 200,210 L 70,210 Z" />
+        </g>
+
+        <!-- ティーカップ本体（外枠と取っ手） -->
+        <g stroke="#6b4c3b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- カップ外枠 -->
+          <path d="M 80,145 C 80,190 110,203 135,203 C 160,203 190,190 190,145 Z" fill="rgba(255,255,255,0.3)" />
+          <!-- カップの持ち手 -->
+          <path d="M 190,155 C 208,155 208,180 185,183" />
+        </g>
+
+        <!-- 注がれるお茶のライン -->
+        <path class="tea-stream" d="M 175,108 Q 150,115 135,155" stroke="#c87d55" stroke-width="4" fill="none" stroke-linecap="round" />
+
+        <!-- ティーポット（グループ全体で回転） -->
+        <g class="teapot">
+          <!-- ポット本体 -->
+          <path d="M 180,75 C 170,40 230,35 240,65 C 255,70 260,95 245,105 C 220,120 185,110 180,75 Z" fill="#fff" stroke="#6b4c3b" stroke-width="4" stroke-linejoin="round" />
+          <!-- 注ぎ口 -->
+          <path d="M 185,80 Q 170,82 168,100 Q 178,103 188,92" fill="#fff" stroke="#6b4c3b" stroke-width="4" stroke-linejoin="round" />
+          <!-- 取っ手 -->
+          <path d="M 240,65 C 265,60 265,95 242,100" fill="none" stroke="#6b4c3b" stroke-width="4" stroke-linecap="round" />
+          <!-- 蓋とつまみ -->
+          <path d="M 195,50 Q 210,42 225,50" fill="none" stroke="#6b4c3b" stroke-width="4" />
+          <circle cx="210" cy="43" r="4" fill="#6b4c3b" />
+        </g>
+
+      </svg>
+    </div>
+    
+    <div class="loading-text">Now Pouring...</div>
+  </div>
+
+</body>
+</html>

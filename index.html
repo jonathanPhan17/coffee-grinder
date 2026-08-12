@@ -4,7 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coffee Grinder</title>
+    <title>Coffee Grinder — job matches scored with receipts</title>
+    <meta name="description" content="Upload your résumé and get an honest 0–100 scorecard for every job posting — every verdict shown with its evidence and reasoning. Free while in beta." />
+    <meta name="theme-color" content="#fbf7f2" />
+    <script>
+      // Latte is the product default; dark roast only when explicitly chosen.
+      // Runs before first paint so returning dark-roast users never flash cream
+      // and new visitors never flash dark. Mirrors getInitialTheme in the
+      // ThemeProvider — keep the two in agreement.
+      try {
+        if (localStorage.getItem('cg-theme') !== 'dark') document.documentElement.classList.add('latte');
+      } catch {
+        document.documentElement.classList.add('latte');
+      }
+    </script>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Coffee Grinder" />
+    <meta property="og:title" content="Coffee Grinder — job matches scored with receipts" />
+    <meta property="og:description" content="An honest 0–100 scorecard for every job posting, with evidence and reasoning in plain sight — not a black-box match percentage." />
+    <meta property="og:url" content="https://coffeegrinder.app/" />
+    <meta property="og:image" content="https://coffeegrinder.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>
