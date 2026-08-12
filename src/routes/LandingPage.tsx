@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { HeroScorecard } from '@/features/landing/HeroScorecard';
+import { BandDecor, Bean, Blob, CoffeeRing } from '@/features/landing/decor';
 import { Reveal } from '@/features/landing/Reveal';
 import { cn } from '@/lib/utils/cn';
 import { useAuthSession } from '@/lib/auth/useAuthSession';
@@ -168,13 +169,19 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col gap-16 py-4">
-      <section className="relative flex flex-col gap-8">
+      {/* isolate: the -z-10 garnish must stack inside this section — without
+          it, negative z drops to the root context and paints behind the
+          AppShell's opaque bg-bg, i.e. invisibly. */}
+      <section className="relative isolate flex flex-col gap-8">
         {/* Morning light behind the headline — same pattern as the scorecard's
             glow; the blur is ink overflow and never scrolls. */}
         <div
           aria-hidden
-          className="absolute -top-24 -left-32 -z-10 size-[480px] rounded-full bg-crema/10 blur-3xl"
+          className="absolute -top-24 -left-32 -z-10 size-120 rounded-full bg-crema/10 blur-3xl"
         />
+        {/* A mug was here — stain in the empty top-right of the headline zone.
+            Hidden on small screens where the text owns the full width. */}
+        <CoffeeRing className="-top-14 right-0 -z-10 hidden w-56 rotate-12 text-crema/60 sm:block" />
         <div className="flex flex-col gap-4">
           <span
             style={rise(0).style}
@@ -213,13 +220,25 @@ export default function LandingPage() {
         <p style={rise(240).style} className={`${rise(240).className} text-sm text-text-secondary`}>
           Free while in beta — 5 runs a month, no card needed.
         </p>
-        <div style={rise(300).style} className={rise(300).className}>
+        <div style={rise(300).style} className={`${rise(300).className} relative`}>
+          {/* Crema spills behind the floating scorecard; the big one drifts on
+              its own beat so the two never move in lockstep. */}
+          <Blob className="-top-16 -right-44 -z-10 h-80 w-80 rotate-6 bg-crema/25 motion-safe:animate-hero-float [animation-delay:1.2s]" />
+          <Blob shape="b" className="-bottom-16 -left-36 -z-10 h-56 w-56 bg-accent/10" />
           <HeroScorecard />
         </div>
       </section>
 
       <Band className="bg-surface">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16">
+        <BandDecor>
+          {/* Smaller and higher on phones so the stain grazes the heading
+              instead of sprawling under the whole paragraph. */}
+          <CoffeeRing className="-top-28 -right-20 w-64 rotate-12 text-crema/70 sm:-top-24 sm:-right-16 sm:w-80" />
+          <Blob shape="b" className="-bottom-28 -left-24 h-72 w-72 bg-bg/60" />
+          <Bean className="right-[8%] bottom-9 hidden w-9 rotate-[-24deg] text-crema/80 lg:block" />
+          <Bean className="right-[5%] bottom-16 hidden w-6 rotate-15 text-crema/60 lg:block" />
+        </BandDecor>
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16">
           <Reveal className="flex flex-col gap-3">
             <h2 className="font-display text-2xl font-semibold">Scores you can argue with</h2>
             <p className="max-w-2xl text-text-secondary">
@@ -266,7 +285,17 @@ export default function LandingPage() {
       </Band>
 
       {/* scroll-mt clears the sticky h-16 NavBar on fragment jumps */}
-      <section id="how-it-works" className="flex scroll-mt-20 flex-col gap-6">
+      {/* isolate for the same reason as the hero: keep -z-10 garnish above
+          the AppShell background. */}
+      <section id="how-it-works" className="relative isolate flex scroll-mt-20 flex-col gap-6">
+        {/* Surface-tone blob under the step cards — the bands' fill, inverted
+            onto the page background — plus beans scattered right of the
+            heading where the column runs empty. */}
+        <Blob className="top-16 -left-52 -z-10 h-104 w-104 -rotate-6 bg-surface" />
+        <Blob shape="b" className="-right-40 -bottom-24 -z-10 h-72 w-72 bg-crema/15" />
+        <Bean className="top-2 right-10 -z-10 hidden w-10 rotate-18 text-crema/70 md:block" />
+        <Bean className="top-14 right-24 -z-10 hidden w-7 rotate-[-26deg] text-crema/50 md:block" />
+        <Bean className="top-6 right-40 -z-10 hidden w-5 rotate-40 text-crema/40 md:block" />
         <Reveal>
           <h2 className="font-display text-2xl font-semibold">
             From résumé to shortlist in one grind
@@ -294,7 +323,14 @@ export default function LandingPage() {
       </section>
 
       <Band className="bg-surface">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16">
+        {/* Mirror of the first band's garnish — stain bottom-left, spill
+            top-right — so the two never read as a copy-paste. */}
+        <BandDecor>
+          <CoffeeRing className="-bottom-28 -left-20 w-96 -rotate-45 text-crema/60" />
+          <Blob className="-top-24 -right-32 h-80 w-80 rotate-12 bg-bg/60" />
+          <Bean className="top-12 right-[12%] hidden w-8 rotate-22 text-crema/70 lg:block" />
+        </BandDecor>
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16">
           <Reveal>
             <h2 className="font-display text-2xl font-semibold">
               Everything brews from the scorecard
