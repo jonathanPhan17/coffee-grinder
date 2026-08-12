@@ -84,7 +84,7 @@ export function NavBar() {
           {/* Not while restoring a stored session — a signed-in user refreshing
               must not see a Sign in flash (same wait RequireAuth applies). */}
           {!showApp && !isLoading && (
-            <Button size="sm" onClick={signIn}>
+            <Button size="sm" onClick={() => signIn()}>
               Sign in
             </Button>
           )}

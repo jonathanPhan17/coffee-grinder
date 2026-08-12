@@ -14,7 +14,12 @@ export function SignInGate() {
         <BrandMark className="size-12" />
         <h1 className="font-display text-2xl font-semibold">Welcome to Coffee Grinder</h1>
         <p className="text-text-secondary">Sign in to start grinding your job hunt.</p>
-        <Button onClick={signIn}>Sign in</Button>
+        <div className="flex flex-col items-center gap-2">
+          <Button onClick={() => signIn()}>Sign in</Button>
+          <Button variant="ghost" onClick={() => signIn('signup')}>
+            Create an account
+          </Button>
+        </div>
         <p className="text-xs text-text-secondary">
           By signing in you agree to the{' '}
           <Link to="/terms" className="underline hover:text-text">

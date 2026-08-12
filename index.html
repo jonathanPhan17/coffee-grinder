@@ -18,6 +18,12 @@
         document.documentElement.classList.add('latte');
       }
     </script>
+    <script>
+      // amazon-cognito-identity-js reaches Node's `global` through its
+      // `buffer` dependency; webpack shimmed that, Vite does not. Provide it
+      // before any chunk loads — dev and production alike.
+      globalThis.global = globalThis;
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Coffee Grinder" />
     <meta property="og:title" content="Coffee Grinder — job matches scored with receipts" />

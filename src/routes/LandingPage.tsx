@@ -198,7 +198,7 @@ export default function LandingPage() {
           </p>
         </div>
         <div style={rise(180).style} className={`${rise(180).className} flex flex-wrap items-center gap-3`}>
-          <Button size="lg" onClick={signIn}>
+          <Button size="lg" onClick={() => signIn('signup')}>
             <CoffeeIcon size={18} weight="fill" />
             Start grinding — it's free
           </Button>
@@ -392,7 +392,7 @@ export default function LandingPage() {
                 Sign up with your email, drop in your résumé, and see your first scorecard in a
                 couple of minutes.
               </p>
-              <Button size="lg" onClick={signIn}>
+              <Button size="lg" onClick={() => signIn('signup')}>
                 <CoffeeIcon size={18} weight="fill" />
                 Start grinding — it's free
               </Button>
@@ -401,7 +401,7 @@ export default function LandingPage() {
                 {/* accent-hover, not accent: the only cinnamon that passes AA at this size in both themes */}
                 <button
                   type="button"
-                  onClick={signIn}
+                  onClick={() => signIn()}
                   className="font-semibold text-accent-hover hover:underline"
                 >
                   Sign in

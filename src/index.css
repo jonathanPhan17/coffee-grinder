@@ -43,6 +43,25 @@
     }
   }
 
+  /* Auth modal: the overlay fades in and the panel rises with a slight
+   * scale-up. `backwards` releases the transform after it ends (same
+   * fixed-child reason as page-in). */
+  --animate-overlay-in: overlay-in 150ms ease-out backwards;
+  --animate-modal-in: modal-in 200ms ease-out backwards;
+
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+  }
+
   /* Landing-page motion. `backwards` on rise for the same fixed-child reason
    * as page-in; float/steam loop forever and live on decorative elements only. */
   --animate-landing-rise: landing-rise 600ms ease-out backwards;

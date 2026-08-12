@@ -8,11 +8,14 @@ export const client = axios.create({
 // Auth is wired through function slots the auth provider fills in at runtime —
 // importing auth code here directly would be a circular import (auth code
 // imports this client). Both stay null when auth is disabled.
-let getToken: (() => string | null) | null = null;
+// The getter may be async: an expired access token refreshes against Cognito
+// mid-request, and the interceptor simply awaits it.
+type TokenGetter = () => string | null | Promise<string | null>;
+let getToken: TokenGetter | null = null;
 let onUnauthorized: (() => void) | null = null;
 
 /** Registered by the auth provider; pass null to detach (requests go out bare). */
-export function setAuthTokenGetter(fn: (() => string | null) | null) {
+export function setAuthTokenGetter(fn: TokenGetter | null) {
   getToken = fn;
 }
 
