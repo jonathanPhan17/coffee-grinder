@@ -14,6 +14,14 @@ export function scoreTone(score: number): Tone {
   return 'danger';
 }
 
+/** Remaining free runs -> indicator tone: plenty reads calm, the last run is
+ *  a nudge, zero matches the disabled CTA and the reset-date line. */
+export function quotaTone(remaining: number): Tone {
+  if (remaining <= 0) return 'danger';
+  if (remaining === 1) return 'warning';
+  return 'success';
+}
+
 export const verdictDisplay: Record<Verdict, { label: string; tone: Tone }> = {
   met: { label: 'Met', tone: 'success' },
   partial: { label: 'Partial', tone: 'warning' },

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { CoverLetterDraft, Match, ResumeProfile, Run } from '@/types/domain';
+import type { CoverLetterDraft, Match, Quota, ResumeProfile, Run } from '@/types/domain';
 import { mockCoverLetterDrafts } from '@/mocks/fixtures';
 import { client } from './client';
 
@@ -57,6 +57,11 @@ export function startRun(input: {
 /** GET /runs/{id} — poll run status. */
 export function getRun(id: string): Promise<Run> {
   return client.get<Run>(`/runs/${id}`).then((r) => r.data);
+}
+
+/** GET /quota - remaining free-run allowance for the signed-in user. */
+export function getQuota(): Promise<Quota> {
+  return client.get<Quota>('/quota').then((r) => r.data);
 }
 
 /** GET /matches?run=… — list scored matches, sorted best first. */

@@ -12,7 +12,8 @@ Functions, DynamoDB, Amazon Bedrock) — lives in
 ## Screens
 
 - **Upload** — drop in a resume; the backend parses it into a profile.
-- **Run setup** — choose the job search (query, location, how many postings to screen).
+- **Run setup** — choose the job search (query, location, how many postings to screen),
+  and see how many free runs you have left this month.
 - **Run status** — live progress while the pipeline fetches and scores postings.
 - **Results** — the scored matches for a run, best first.
 - **Scorecard** — one match in detail: per-criterion scores with the evidence quotes

@@ -15,12 +15,20 @@ import { ScoreRing } from '@/components/ui/ScoreRing';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { MatchCard } from '@/features/results/MatchCard';
 import { BrewingProgress } from '@/features/runs/BrewingProgress';
+import { QuotaIndicator } from '@/features/runs/QuotaIndicator';
+import { RunErrorNotice } from '@/features/runs/RunErrorNotice';
 import { RunSteps } from '@/features/runs/RunSteps';
 import { CriteriaGroup } from '@/features/scorecard/CriteriaGroup';
 import { CriterionRow } from '@/features/scorecard/CriterionRow';
 import { GapCallout } from '@/features/scorecard/GapCallout';
 import { ScoreHeader } from '@/features/scorecard/ScoreHeader';
-import type { CriterionEvidence, Match, Run } from '@/types/domain';
+import type {
+  CriterionEvidence,
+  Match,
+  QuotaExceededBody,
+  QuotaWindow,
+  Run,
+} from '@/types/domain';
 import type { Tone } from '@/types/ui';
 
 /* ── Fixture builders ────────────────────────────────────────────────── */
@@ -84,6 +92,21 @@ function mkRun(over: Partial<Run> = {}): Run {
     createdAt: '2026-08-11T09:00:00.000Z',
     ...over,
   };
+}
+
+function mkQuotaWindow(remaining: number): QuotaWindow {
+  return {
+    used: 5 - remaining,
+    limit: 5,
+    remaining,
+    resetsAt: '2026-09-01T00:00:00.000Z',
+  };
+}
+
+/** Shaped like the axios error a 429 POST /runs rejects with - enough for
+ *  axios.isAxiosError's structural check, so the real message mapper runs. */
+function mk429(body: QuotaExceededBody): unknown {
+  return { isAxiosError: true, response: { status: 429, data: body } };
 }
 
 /* ── Scenarios ───────────────────────────────────────────────────────── */
@@ -164,6 +187,21 @@ const manyGaps: CriterionEvidence[] = [
 ];
 
 const badgeTones: Tone[] = ['accent', 'success', 'warning', 'danger', 'neutral'];
+
+const quota429Fixtures: QuotaExceededBody[] = [
+  {
+    error: 'monthly free-run limit reached',
+    code: 'monthly_quota',
+    limit: 5,
+    resetsAt: '2026-09-01T00:00:00.000Z',
+  },
+  {
+    error: 'daily site-wide run cap reached',
+    code: 'daily_cap',
+    limit: 25,
+    resetsAt: '2026-08-12T00:00:00.000Z',
+  },
+];
 
 /* ── Page ────────────────────────────────────────────────────────────── */
 
@@ -362,6 +400,26 @@ export default function GalleryPage() {
             description="Something went wrong fetching this match. Give it another try."
             action={<Button>Retry</Button>}
           />
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+              Free-run quota row at 3 / 1 / 0 remaining (reset date shows at 0)
+            </p>
+            <div className="flex flex-col gap-3">
+              {[3, 1, 0].map((remaining) => (
+                <QuotaIndicator key={remaining} monthly={mkQuotaWindow(remaining)} />
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+              Start-run failure banners - the two 429 variants
+            </p>
+            <div className="flex flex-col gap-3">
+              {quota429Fixtures.map((body) => (
+                <RunErrorNotice key={body.code} error={mk429(body)} />
+              ))}
+            </div>
+          </div>
         </div>
       </Section>
     </div>

@@ -13,6 +13,9 @@ export const queryKeys = {
     all: ['runs'] as const,
     detail: (runId: string) => ['runs', runId] as const,
   },
+  quota: {
+    current: ['quota'] as const,
+  },
   matches: {
     all: ['matches'] as const,
     board: ['matches', 'board'] as const,
