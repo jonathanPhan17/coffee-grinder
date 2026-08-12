@@ -658,7 +658,7 @@ export const mockCoverLetterDrafts: CoverLetterDraft[] = [
       'I’d love to bring that same care and warmth to Lumen Labs. Thank you for considering me — I’d be thrilled to talk.',
       '',
       'Warmly,',
-      'Alex Rivera',
+      '[Your name]',
     ].join('\n'),
   },
   {

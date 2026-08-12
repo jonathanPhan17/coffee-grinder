@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { CoffeeIcon, ListIcon, MoonIcon, SunIcon, XIcon } from '@phosphor-icons/react';
+import { CoffeeIcon, ListIcon, MoonIcon, SignOutIcon, SunIcon, XIcon } from '@phosphor-icons/react';
 import { NavLink } from 'react-router';
 import { cn } from '@/lib/utils/cn';
 import { useTheme } from '@/lib/theme/useTheme';
+import { useAuthSession } from '@/lib/auth/useAuthSession';
 
 const links = [
   { to: '/', label: 'Home', end: true },
@@ -12,8 +13,14 @@ const links = [
 
 export function NavBar() {
   const { theme, toggleTheme } = useTheme();
+  const { isEnabled, isAuthenticated, email, signOut } = useAuthSession();
   const [mobileOpen, setMobileOpen] = useState(false);
   const closeMenu = () => setMobileOpen(false);
+
+  // Only a real signed-in identity gets an account cluster: signed-out is the
+  // SignInGate's job, and auth-disabled local dev shows no fake persona.
+  const showAccount = isEnabled && isAuthenticated;
+  const initial = email ? email.split('@')[0].charAt(0).toUpperCase() : '?';
 
   const ThemeToggle = (
     <button
@@ -63,9 +70,24 @@ export function NavBar() {
         {/* Right cluster */}
         <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
           {ThemeToggle}
-          <span className="hidden size-9 place-items-center rounded-full bg-elevated text-sm font-semibold md:grid">
-            AR
-          </span>
+          {showAccount && (
+            <>
+              <span
+                title={email ?? undefined}
+                className="hidden size-9 place-items-center rounded-full bg-elevated text-sm font-semibold md:grid"
+              >
+                {initial}
+              </span>
+              <button
+                type="button"
+                onClick={signOut}
+                aria-label="Sign out"
+                className="hidden size-9 place-items-center rounded-full text-text-secondary transition-colors hover:bg-elevated hover:text-text md:grid"
+              >
+                <SignOutIcon size={18} weight="bold" />
+              </button>
+            </>
+          )}
           {/* Hamburger — mobile only */}
           <button
             type="button"
@@ -102,12 +124,24 @@ export function NavBar() {
                 {link.label}
               </NavLink>
             ))}
-            <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">
-              <span className="grid size-8 place-items-center rounded-full bg-elevated text-xs font-semibold">
-                AR
-              </span>
-              <span className="text-sm text-text-secondary">Alex Rivera</span>
-            </div>
+            {showAccount && (
+              <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-elevated text-xs font-semibold">
+                  {initial}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-sm text-text-secondary">{email}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMenu();
+                    signOut();
+                  }}
+                  className="shrink-0 rounded-md px-3 py-1.5 text-sm font-semibold text-text-secondary transition-colors hover:bg-elevated hover:text-text"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
